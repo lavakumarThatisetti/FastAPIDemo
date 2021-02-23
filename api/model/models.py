@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, text
 from sqlalchemy.orm import relationship
 
 from api.repository.database import Base
@@ -12,6 +12,7 @@ class User(Base):
     email_id = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
+    created_on = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     items = relationship("Item", back_populates="owner")
 
 

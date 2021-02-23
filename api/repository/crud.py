@@ -9,7 +9,7 @@ def get_user(db: Session, user_id: int):
 
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    return db.query(models.User).filter(models.User.email_id == email).first()
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -18,7 +18,11 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
-    db_user = models.User(email=user.email, hashed_password=hashed_password)
+    db_user = models.User(
+                          user_name=user.user_name,
+                          email_id=user.email_id,
+                          hashed_password=hashed_password
+                          )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -27,7 +31,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def update_user(db: Session, user: schemas.UserCreate):
     hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
-    db_user = get_user_by_email(db, user.email)
+    db_user = get_user_by_email(db, user.email_id)
     db_user.hashed_password = hashed_password
     db.commit()
     db.refresh(db_user)
